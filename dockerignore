@@ -1,0 +1,52 @@
+# ================================================================
+# .dockerignore — WedPlan Backend
+# Exclure les fichiers inutiles pour réduire la taille de l'image
+# ================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node (si présent)
+node_modules
+npm-debug.log
+
+# Tests
+tests
+phpunit.xml
+.phpunit.cache
+
+# Documentation
+*.md
+README*
+CHANGELOG*
+LICENSE
+
+# Dev config
+.env
+.env.*
+!.env.example
+
+# Logs locaux
+storage/logs/*.log
+
+# Cache local
+bootstrap/cache/*.php
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# IDE
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (pas besoin de l'inclure dans lui-même)
+Dockerfile
+docker-compose*.yml

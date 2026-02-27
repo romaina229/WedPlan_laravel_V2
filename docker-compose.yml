@@ -1,0 +1,82 @@
+# ================================================================
+# docker-compose.yml — Test local avant déploiement Railway
+# Usage : docker compose up --build
+# ================================================================
+
+services:
+
+  # ── Backend Laravel ───────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wedplan_backend
+    ports:
+      - "8000:80"
+    environment:
+      APP_NAME: WedPlan
+      APP_ENV: production
+      APP_KEY: base64:CHANGEZ_MOI_php_artisan_key_generate
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:8000
+      # Base de données
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: wedplan
+      DB_USERNAME: wedplan
+      DB_PASSWORD: wedplan_secret
+      # Session & Cache
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      # CORS
+      FRONTEND_URL: http://localhost:5173
+      # Logs
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: debug
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      # Persister les logs en dev
+      - ./storage/logs:/var/www/html/storage/logs
+    restart: unless-stopped
+
+  # ── MySQL ────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: wedplan_mysql
+    environment:
+      MYSQL_DATABASE: wedplan
+      MYSQL_USER: wedplan
+      MYSQL_PASSWORD: wedplan_secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uwedplan", "-pwedplan_secret"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ── phpMyAdmin (optionnel — accès base en dev) ───────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: wedplan_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: wedplan
+      PMA_PASSWORD: wedplan_secret
+    depends_on:
+      - mysql
+    profiles:
+      - debug   # Démarrer avec: docker compose --profile debug up
+
+volumes:
+  mysql_data:
+    driver: local

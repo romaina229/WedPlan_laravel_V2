@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: wedplan-backend
+    env: php
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: |
+      composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+      chmod -R 775 storage bootstrap/cache
+    startCommand: |
+      php artisan config:clear
+      php artisan key:generate --force
+      php artisan migrate --force
+      php artisan db:seed --force
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: APP_NAME
+        value: WedPlan
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: mysql
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error

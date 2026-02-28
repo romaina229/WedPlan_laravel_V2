@@ -29,8 +29,9 @@ return new class extends Migration
             $table->string('email', 150)->unique();
             $table->string('password_hash', 255);
             $table->string('telephone', 20)->nullable();
-            $table->enum('role', ['parrain', 'conseiller'])->default('parrain');
-            $table->enum('statut', ['actif', 'inactif', 'en_attente'])->default('actif');
+            // ✅ Remplacé enum() par string() + default() — compatible PostgreSQL
+            $table->string('role', 20)->default('parrain');
+            $table->string('statut', 20)->default('actif');
             $table->timestamps();
 
             $table->index(['wedding_dates_id']);
@@ -43,8 +44,9 @@ return new class extends Migration
             $table->foreignId('sponsor_id')->constrained('wedding_sponsors')->cascadeOnDelete();
             $table->foreignId('expense_id')->nullable()->constrained('expenses')->cascadeOnDelete();
             $table->text('commentaire');
-            $table->enum('type_commentaire', ['general', 'depense', 'suggestion'])->default('general');
-            $table->enum('statut', ['public', 'prive'])->default('public');
+            // ✅ Remplacé enum() par string() + default() — compatible PostgreSQL
+            $table->string('type_commentaire', 20)->default('general');
+            $table->string('statut', 10)->default('public');
             $table->timestamps();
 
             $table->index('wedding_dates_id');
@@ -56,7 +58,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sponsor_id')->constrained('wedding_sponsors')->cascadeOnDelete();
             $table->foreignId('wedding_dates_id')->constrained('wedding_dates')->cascadeOnDelete();
-            $table->enum('action_type', ['connexion', 'consultation', 'commentaire', 'deconnexion']);
+            // ✅ Remplacé enum() par string() + default() — compatible PostgreSQL
+            $table->string('action_type', 20)->default('consultation');
             $table->text('details')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 255)->nullable();
@@ -84,7 +87,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('action', 255);
-            $table->enum('action_type', ['admin', 'auth', 'data', 'error'])->default('auth');
+            // ✅ Remplacé enum() par string() + default() — compatible PostgreSQL
+            $table->string('action_type', 10)->default('auth');
             $table->text('details')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();

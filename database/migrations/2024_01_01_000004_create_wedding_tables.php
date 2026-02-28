@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('password_hash', 255);
             $table->string('telephone', 20)->nullable();
             $table->enum('role', ['parrain', 'conseiller'])->default('parrain');
-            $table->enum('statut', ['actif', 'inactif'])->default('actif');
+            $table->enum('statut', ['actif', 'inactif', 'en_attente'])->default('actif');
             $table->timestamps();
 
             $table->index(['wedding_dates_id']);

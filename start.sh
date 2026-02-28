@@ -36,8 +36,8 @@ DB_USERNAME=${DB_USERNAME:-postgres.xxxxx}
 DB_PASSWORD=${DB_PASSWORD:-xxxxxx}
 
 # Cache / Session / Queue
-SESSION_DRIVER=file
-CACHE_STORE=file
+SESSION_DRIVER=databse
+CACHE_STORE=cookie
 QUEUE_CONNECTION=sync
 
 FRONTEND_URL=${FRONTEND_URL:-*}

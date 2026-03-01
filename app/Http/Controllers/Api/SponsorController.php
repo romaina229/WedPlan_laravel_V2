@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\WeddingDate;
 use App\Models\WeddingSponsor;
 use App\Models\SponsorComment;
+use App\Models\Expense;
 use App\Models\AdminLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -416,6 +417,13 @@ class SponsorController extends Controller
         // Notifier le propriétaire du mariage
         $wedding = $sponsor->weddingDate;
         if ($wedding) {
+            // Récupérer le nom de la dépense liée si présent
+            $expenseName = null;
+            if ($comment->expense_id) {
+                $expense = Expense::find($comment->expense_id);
+                $expenseName = $expense?->name;
+            }
+
             \App\Models\Notification::create([
                 'user_id'           => $wedding->user_id,
                 'wedding_dates_id'  => $wedding->id,
@@ -423,6 +431,12 @@ class SponsorController extends Controller
                 'message'           => "Nouveau commentaire de {$sponsor->sponsor_nom_complet} : "
                     . mb_substr($comment->commentaire, 0, 100),
                 'is_read'           => false,
+                'data'              => json_encode([
+                    'expense_id'   => $comment->expense_id,
+                    'expense_name' => $expenseName,
+                    'sponsor_id'   => $sponsor->id,
+                    'comment_id'   => $comment->id,
+                ]),
             ]);
         }
 

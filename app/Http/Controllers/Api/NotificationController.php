@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
+use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -70,13 +71,28 @@ class NotificationController extends Controller
             'mariage_proche'              => 'success',
         ];
 
+        // Récupérer le nom de la dépense liée si présent dans les données
+        $expenseName = null;
+        if (!empty($n->data)) {
+            $data = is_array($n->data) ? $n->data : json_decode($n->data, true);
+            if (!empty($data['expense_id'])) {
+                $expense = Expense::find($data['expense_id']);
+                $expenseName = $expense?->name;
+            }
+            // Fallback : expense_name directement dans data
+            if (!$expenseName && !empty($data['expense_name'])) {
+                $expenseName = $data['expense_name'];
+            }
+        }
+
         return [
-            'id'         => $n->id,
-            'title'      => $titles[$n->type_notification] ?? 'Notification',
-            'message'    => $n->message,
-            'type'       => $types[$n->type_notification]  ?? 'info',
-            'is_read'    => (bool) $n->is_read,
-            'created_at' => $n->created_at?->toISOString(),
+            'id'           => $n->id,
+            'title'        => $titles[$n->type_notification] ?? 'Notification',
+            'message'      => $n->message,
+            'type'         => $types[$n->type_notification]  ?? 'info',
+            'is_read'      => (bool) $n->is_read,
+            'created_at'   => $n->created_at?->toISOString(),
+            'expense_name' => $expenseName,
         ];
     }
 }

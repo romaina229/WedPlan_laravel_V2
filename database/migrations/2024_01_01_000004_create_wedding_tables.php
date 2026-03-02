@@ -80,7 +80,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['user_id', 'is_read']);
-            $table->json('data')->nullable()->after('is_read');
+            $table->jsonb('data')->nullable();
             $table->index('wedding_dates_id');
         });
 

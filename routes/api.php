@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\AdminController;
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login',    [AuthController::class, 'login']);
+    Route::get('health', fn() => response()->json(['status' => 'ok']));
 });
 
 // Connexion publique parrain + tableau de bord parrain (sans auth Sanctum)

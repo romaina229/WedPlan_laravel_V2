@@ -14,7 +14,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [     'http://localhost:3000',   
-        env('FRONTEND_URL_1', 'https://wedplan-chi.vercel.app'), // Domaine principal récupéré depuis le fichier .env       
+        env('FRONTEND_URL_1', 'https://lereve.vercel.app'), // Domaine principal récupéré depuis le fichier .env       
         env('FRONTEND_URL_2', 'https://wedplan.com'), // Domaine secondaire en cas de panne
     ],
 

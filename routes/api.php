@@ -19,11 +19,11 @@ use App\Http\Controllers\Api\AdminController;
 // ── Routes publiques ──────────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
-    Route::post('login',    [AuthController::class, 'login']);
-    Route::get('health', fn() => response()->json(['status' => 'ok']));
+    Route::post('login',    [AuthController::class, 'login']);  
 });
 
 // Connexion publique parrain + tableau de bord parrain (sans auth Sanctum)
+Route::get('health', fn() => response()->json(['status' => 'ok']));
 Route::post('sponsors/login',                    [SponsorController::class, 'login']);
 Route::post('sponsors/comments',                 [SponsorController::class, 'addComment']);
 Route::get('sponsors/dashboard/{sponsorId}',     [SponsorController::class, 'dashboard']);
